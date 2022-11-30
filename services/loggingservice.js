@@ -7,15 +7,17 @@ const handler = (func) => (req, res) => {
         func(req, res);
         req.logger.info('handler.end');
     } catch (e) {
-        req.logger.error('handler.failed', e)
+        req.logger.error("Meaningful log message", e)
 
         req.appInsights.trackException({
             exception: e,
-            userId: req.user.userId
+            properties: {
+                userId: req.user.userId
+            }
         })
 
         res.status(500)
-        res.send('FAILURE')
+        res.writeHead(500, 'Internal Error').end();
     }
 };
 
@@ -38,7 +40,9 @@ module.exports = function () {
             req.logger.error("Meaningful log message", e)
             req.appInsights.trackException({
                 exception: e,
-                userId: req.user.userId
+                properties: {
+                    userId: req.user.userId
+                }
             })
             res.writeHead(500, 'Internal Error').end();
         }
