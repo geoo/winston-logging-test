@@ -35,12 +35,12 @@ module.exports = function () {
             var test
             test.test()
         } catch (e) {
-            req.logger.error("test", e)
+            req.logger.error("Meaningful log message", e)
             req.appInsights.trackException({
                 exception: e,
                 userId: req.user.userId
             })
-            res.status(500).send('FAILURE')
+            res.writeHead(500, 'Internal Error').end();
         }
     });
 
